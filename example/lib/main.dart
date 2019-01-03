@@ -38,6 +38,17 @@ class Page extends StatefulWidget {
 class _PageState extends State<Page> {
   String msg = "";
   bool _isSandbox = false;
+  String version;
+
+  @override
+  void initState() {
+    super.initState();
+    AlipayMe.getVersion().then((v) {
+      setState(() {
+        version = v;
+      });
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -49,6 +60,8 @@ class _PageState extends State<Page> {
       body: Padding(padding: const EdgeInsets.all(16.0), child: ListView(
         primary: true,
         children: <Widget>[
+          Text("开发包版本号：${version ?? ""}"),
+          SizedBox(height: 8.0),
           Row(
             children: <Widget>[
               Checkbox(value: _isSandbox, onChanged: (v) {

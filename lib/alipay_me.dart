@@ -62,4 +62,9 @@ class AlipayMe {
     }
     return result;
   }
+
+  /// 获取支付宝当前开发包版本号
+  static Future<String> getVersion({String appId, String pid, String rsa2Private, String rsaPrivate, String targetId}) async {
+    return await _channel.invokeMethod('version');
+  }
 }

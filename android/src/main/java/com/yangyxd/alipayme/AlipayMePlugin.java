@@ -76,6 +76,9 @@ public class AlipayMePlugin implements MethodCallHandler {
       String authInfo = call.argument("authInfo");
       boolean isSandbox = call.argument("isSandbox");
       Oauth(_reg.activity(), authInfo, isSandbox, result);
+    } else if ("version".equals(method)) {
+      PayTask payTask = new PayTask(_reg.activity());
+      result.success(payTask.getVersion());
     } else {
       result.notImplemented();
     }
