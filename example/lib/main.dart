@@ -123,6 +123,7 @@ class _PageState extends State<Page> {
   }
 
   doPayExec(String apyInfo) async {
+    await initAlipay();
     var o = await AlipayMe.pay(apyInfo,
       urlScheme: null,
       isSandbox: _isSandbox,
@@ -133,11 +134,21 @@ class _PageState extends State<Page> {
   }
 
   doOauth(BuildContext context) async {
+    await initAlipay();
+    var o = await AlipayMe.auth(
+      isSandbox: _isSandbox,
+    );
+    setState(() {
+      msg = "$o";
+    });
+  }
+
+  initAlipay() async {
     final String tid = "tid_${DateTime.now().millisecondsSinceEpoch}";
     await AlipayMe.init(
-      appId: "2019010362782013",
-      pid: "2088012716890635",
-      rsa2Private: '''
+        appId: "2019010362782013",
+        pid: "2088012716890635",
+        rsa2Private: '''
 MIIEpAIBAAKCAQEAx3FdShq3y9coefJoNcYw/1weZOigvd09AsSivZLw5uEAyiF2
 DyknfoSAclOj2E9Dl8xgcL5uDQYjmX6hze3Pz51LMmIzZL7+8PTKmjIQfxDMcMi1
 72Hu9eJaDrIdza4PvVR89IAlrRIA0VKd02PAmNCwq4tX+NhIeDpChIWazfolsTR2
@@ -164,14 +175,7 @@ b/LWvpd8PlryPTYopRI9lI1TmGMdX9Ua2VOn3IWQ4f3tCGKZ5l43pY/7ZEOmiEEo
 GXE9jOcmZDK7XQAabahXWVMeX7cjiohYx1BZLOjPo2UMcYNrnmUGPr7lIl6vM3iI
 sMIgBV4Jw4Tm5MydXU3sZiaVk2tkdWGWNsl57mlPRakq8tqD1BiEAQ==      
       ''',
-      targetId: tid
+        targetId: tid
     );
-    var o = await AlipayMe.auth(
-      isSandbox: _isSandbox,
-    );
-    setState(() {
-      msg = "$o";
-    });
   }
-
 }
