@@ -48,10 +48,6 @@ public class AlipayMePlugin implements MethodCallHandler {
   private static String RSA2_PRIVATE = "";
   private static String RSA_PRIVATE = "";
 
-  public static final int SDK_PAY_FLAG = 1;
-  public static final int SDK_AUTH_FLAG = 2;
-
-
   public AlipayMePlugin(Registrar registrar){
     _reg = registrar;
   }
@@ -86,7 +82,28 @@ public class AlipayMePlugin implements MethodCallHandler {
   }
 
   // 支付
-  public static void pay(final Activity currentActivity, final String payInfo, boolean isSandbox, final Result callback){
+  public static void pay(final Activity currentActivity, String payInfo, boolean isSandbox, final Result callback){
+    if (TextUtils.isEmpty(payInfo) || TextUtils.isEmpty(APPID)
+            || (TextUtils.isEmpty(RSA2_PRIVATE) && TextUtils.isEmpty(RSA_PRIVATE))) {
+      callback.error("支付发生错误：无效的参数", null, null);
+      return;
+    }
+
+    /*
+     * 如果payInfo为空，则在本地生成一个测试订单，正式运行时，由服务器生成
+     */
+    if (TextUtils.isEmpty(payInfo)) {
+      boolean rsa2 = (RSA2_PRIVATE.length() > 0);
+      Map<String, String> params = OrderInfoUtil2_0.buildOrderParamMap(APPID, rsa2);
+      String orderParam = OrderInfoUtil2_0.buildOrderParam(params);
+
+      String privateKey = rsa2 ? RSA2_PRIVATE : RSA_PRIVATE;
+      String sign = OrderInfoUtil2_0.getSign(params, privateKey, rsa2);
+      payInfo = orderParam + "&" + sign;
+    }
+
+    final String orderInfo = payInfo;
+
     //沙箱环境
     if(isSandbox){
       EnvUtils.setEnv(EnvUtils.EnvEnum.SANDBOX);
@@ -97,7 +114,7 @@ public class AlipayMePlugin implements MethodCallHandler {
       public void run() {
         try {
           PayTask alipay = new PayTask(currentActivity);
-          Map<String, String> result = alipay.payV2(payInfo, true);
+          Map<String, String> result = alipay.payV2(orderInfo, true);
           callback.success(result);
         } catch (Exception e) {
           callback.error(e.getMessage(),"支付发生错误", e);
@@ -114,7 +131,7 @@ public class AlipayMePlugin implements MethodCallHandler {
     if (TextUtils.isEmpty(authInfo) && TextUtils.isEmpty(PID) || TextUtils.isEmpty(APPID)
             || (TextUtils.isEmpty(RSA2_PRIVATE) && TextUtils.isEmpty(RSA_PRIVATE))
             || TextUtils.isEmpty(TARGET_ID)) {
-      callback.error("发生错误：无效的参数", null, null);
+      callback.error("授权发生错误：无效的参数", null, null);
       return;
     }
 
@@ -140,21 +157,25 @@ public class AlipayMePlugin implements MethodCallHandler {
     Runnable authRunnable = new Runnable() {
       @Override
       public void run() {
-        // 构造AuthTask 对象
-        AuthTask authTask = new AuthTask(currentActivity);
-        // 调用授权接口，获取授权结果
-        Map<String, String> result = authTask.authV2(_authInfo, true);
-        // 返回
-        AuthResult ar = new AuthResult(result, true);
+        try {
+          // 构造AuthTask 对象
+          AuthTask authTask = new AuthTask(currentActivity);
+          // 调用授权接口，获取授权结果
+          Map<String, String> result = authTask.authV2(_authInfo, true);
+          // 返回
+          AuthResult ar = new AuthResult(result, true);
 
-        Map map = new HashMap();
-        map.put("openId", ar.getAlipayOpenId());
-        map.put("authCode", ar.getAuthCode());
-        map.put("memo", ar.getMemo());
-        map.put("result", ar.getResult());
-        map.put("resultCode", ar.getResultCode());
-        map.put("status", ar.getResultStatus());
-        callback.success(map);
+          Map map = new HashMap();
+          map.put("openId", ar.getAlipayOpenId());
+          map.put("authCode", ar.getAuthCode());
+          map.put("memo", ar.getMemo());
+          map.put("result", ar.getResult());
+          map.put("resultCode", ar.getResultCode());
+          map.put("status", ar.getResultStatus());
+          callback.success(map);
+        }  catch (Exception e) {
+          callback.error(e.getMessage(),"授权发生错误", e);
+        }
       }
     };
 
