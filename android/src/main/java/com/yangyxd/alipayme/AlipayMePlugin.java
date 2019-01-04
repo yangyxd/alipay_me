@@ -79,6 +79,12 @@ public class AlipayMePlugin implements MethodCallHandler {
     } else if ("version".equals(method)) {
       PayTask payTask = new PayTask(_reg.activity());
       result.success(payTask.getVersion());
+    } else if ("sign".equals(method)) {
+      boolean rsa2 = call.argument("rsa2") == "1";
+      String data = call.argument("data");
+      String privateKey = call.argument("private");
+      String sign = OrderInfoUtil2_0.getSign(data, privateKey, rsa2);
+      result.success(sign);
     } else {
       result.notImplemented();
     }

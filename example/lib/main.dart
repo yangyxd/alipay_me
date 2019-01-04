@@ -5,6 +5,8 @@ import 'dart:io';
 import 'package:flutter/services.dart';
 import 'package:alipay_me/alipay_me.dart';
 
+import 'sign.dart';
+
 void main() => runApp(MyApp());
 
 class MyApp extends StatefulWidget {
@@ -81,6 +83,10 @@ class _PageState extends State<Page> {
             doOauth(context);
           }),
           SizedBox(height: 32.0),
+          OutlineButton(child: Text("测试Sign"), onPressed: () {
+            testSign();
+          }),
+          SizedBox(height: 32.0),
           Text(msg ?? "", style: TextStyle(fontSize: 10.0, color: Colors.blue)),
         ],
       )),
@@ -128,7 +134,7 @@ class _PageState extends State<Page> {
     await initAlipay();
 
     var o = await AlipayMe.pay(apyInfo,
-      urlScheme: "https://www.baidu.com",
+      urlScheme: "alisdkdemo",  // 这里的URL Schemes中输入的alisdkdemo，为测试demo，实际商户的app中要填写独立的scheme
       isSandbox: _isSandbox,
     );
     setState(() {
@@ -143,7 +149,7 @@ class _PageState extends State<Page> {
       data = "Server AuthInfo";  // ioS平台只支持服务器返回
     }
     var o = await AlipayMe.auth(
-      urlScheme: "https://www.baidu.com",
+      urlScheme: "alisdkdemo", // 这里的URL Schemes中输入的alisdkdemo，为测试demo，实际商户的app中要填写独立的scheme
       isSandbox: _isSandbox,
       authInfo: data,
     );
@@ -157,33 +163,55 @@ class _PageState extends State<Page> {
     await AlipayMe.init(
         appId: "2019010362782013",
         pid: "2088012716890635",
-        rsa2Private: '''
-MIIEpQIBAAKCAQEAtRpyDcy7HGE1+i0TFzA027i0gbc8ROvbNgHL9lnWyoiH/HUs
-7d8F8vynr+xV4RzcQjrhemkk0f0azqtvxUPerVof/fWvVqCKCKch2zg8ZTrJcYPL
-bIrqKrNmyK5LatsKzq2/Q/kaHjpWf4QBisEQxqPtCzW8a7GsoHkoWaQn34xakKWZ
-43WTxAfl4IMcaENjJ2aCIO6rtJKzfEqgqS66cdtOr3dViKqxm86RuVkFlzqHMBsc
-zJQA8S+XW3hhHR4UigVdlOYI4wkl1dGnAqONpo1za8nP7vryK3Yd9csXoeGAwcJm
-7HPJYNAZduboiwUsT+tc9aeC/0c2b2xOTubh1wIDAQABAoIBAQCmG0FtItCjsQ3f
-DqSp6g8xUHJPX48p7+I54OAAbloxnZSMm7S/4IUGX3I2S2BhfyUOog7ZRcL9z1Zd
-JKT5m8yL11PsjQFrRQgV86V7+lJ6zrahJS7ZuXgZ/j5R5ntJ4OpCst3xLHMmMn/P
-qXX4nCgU6ZmrZHgTlv0smrPFtGjWAcvP/DSiMqWUqr7FranyiRS/3bBMgU3FOGzc
-X/kBMhDF7Xw6ZsNumGZOj8ky1N9h8wfa7AnZNzNGT9YQy0EuP9C0AVuT2XXsR8ME
-asOaQkHz2bcEGxU0x1rcwkdHHrcLBc2Vx3EvNmcHZXWe1e/p1fEgJ8uS9i8QmDKs
-vrg15qAxAoGBAOaErVG1bNAHddYaPcbc06Aasqeu8TrStAW1ej0EzY4cvNVPbfFR
-eO9UoHBFkP78O/03vBhzldEsO9iH8TCT2hKBOiSirPv0+NXwf6qoZ615h3wnbgmO
-L2thaR7kggU6cFh9PlXYqj6OjJlVldUTZgvpNo+MM84vwAGu4sHzFS1rAoGBAMkf
-ZhBt/QLWuiGgNjmur+C4qAeumpDseTuCDjJJFQZgqNF3QqGY1WxJn9fdddq+hRpJ
-PSOEYt9Y3beMqd+0hdzl2plElbLdXKAUsC7gDmybZbW5VPazH/kC6QJDpGgcRzAb
-EHXL6HO43sqMVc8HQ9aNWxHDbPf6YkjtMsHWuexFAoGBAMQNL0MA5AyBa8yuAMBy
-62GNk0hd1zhKH2WDlPT0csZc1pUsurq0qgASn2kdIVZbu8F+d3DsTQzbbAKai5zf
-AmcelQ63dBvNmxyJMGs6UwMNCxeiiUmDLf1LmZX2jkZYD1iTHELyxMfzgMygJ5BS
-sUWMESVA/oZrwgcscBq33NkFAoGAf7QlLXd5OK05YJKG+9dUq770SnRuhmjwjX2G
-IB3RcMw9RUuRjmQp1+ljykA/Tha9EzS/0maEFUcq+Roi3v2UJe/4/mrTFtCBuM+K
-EymHXyTIzzuPnFmeipFzfFGQ+d5CwWPd7r37qkcPh9LVxW/afkghNEU/UrG0aJPc
-L8J1KXUCgYEApXed9rN+ayYuUBfDnAi3bZC6Fu9rEbs11oLN1SsPbAaRv5SiOSJU
-FykdXth1miipA/6Lft3CN3OhziT6ocwAh9j+RSwxSyT8X4wPERufJpxfS4zN6UZ+
-WQI/djrJbPJQkRyDAeAeTbMjquaF1ST5sqlS/JpwCVvF/yepqYgpIr0=''',
+        rsa2Private: RSAPrivate,
         targetId: tid
     );
   }
+
+  void testSign() async {
+    Map<String, String> map = new Map<String, String>();
+    map["appId"] = "2013081700024223";
+    map["pid"] = "2088102123816631";
+    map["apiname"] = "com.alipay.account.auth";
+    map["app_name"] = "mc";
+    map["product_id"] = "APP_FAST_LOGIN";
+    map["auth_type"] = "AUTHACCOUNT";
+    map["test"] = "中文fdsafdsafdas";
+
+    Sign.getSignFormMap(map, RSAPrivate, true).then((v) {
+      setState(() {
+        msg = v;
+      });
+      print(v);
+    });
+  }
+
+  final String RSAPrivate = '''
+MIIEvwIBADANBgkqhkiG9w0BAQEFAASCBKkwggSlAgEAAoIBAQC1GnINzLscYTX6
+LRMXMDTbuLSBtzxE69s2Acv2WdbKiIf8dSzt3wXy/Kev7FXhHNxCOuF6aSTR/RrO
+q2/FQ96tWh/99a9WoIoIpyHbODxlOslxg8tsiuoqs2bIrktq2wrOrb9D+RoeOlZ/
+hAGKwRDGo+0LNbxrsaygeShZpCffjFqQpZnjdZPEB+XggxxoQ2MnZoIg7qu0krN8
+SqCpLrpx206vd1WIqrGbzpG5WQWXOocwGxzMlADxL5dbeGEdHhSKBV2U5gjjCSXV
+0acCo42mjXNryc/u+vIrdh31yxeh4YDBwmbsc8lg0Bl25uiLBSxP61z1p4L/RzZv
+bE5O5uHXAgMBAAECggEBAKYbQW0i0KOxDd8OpKnqDzFQck9fjynv4jng4ABuWjGd
+lIybtL/ghQZfcjZLYGF/JQ6iDtlFwv3PVl0kpPmbzIvXU+yNAWtFCBXzpXv6UnrO
+tqElLtm5eBn+PlHme0ng6kKy3fEscyYyf8+pdficKBTpmatkeBOW/Syas8W0aNYB
+y8/8NKIypZSqvsWtqfKJFL/dsEyBTcU4bNxf+QEyEMXtfDpmw26YZk6PyTLU32Hz
+B9rsCdk3M0ZP1hDLQS4/0LQBW5PZdexHwwRqw5pCQfPZtwQbFTTHWtzCR0cetwsF
+zZXHcS82ZwdldZ7V7+nV8SAny5L2LxCYMqy+uDXmoDECgYEA5oStUbVs0Ad11ho9
+xtzToBqyp67xOtK0BbV6PQTNjhy81U9t8VF471SgcEWQ/vw7/Te8GHOV0Sw72Ifx
+MJPaEoE6JKKs+/T41fB/qqhnrXmHfCduCY4va2FpHuSCBTpwWH0+VdiqPo6MmVWV
+1RNmC+k2j4wzzi/AAa7iwfMVLWsCgYEAyR9mEG39Ata6IaA2Oa6v4LioB66akOx5
+O4IOMkkVBmCo0XdCoZjVbEmf19112r6FGkk9I4Ri31jdt4yp37SF3OXamUSVst1c
+oBSwLuAObJtltblU9rMf+QLpAkOkaBxHMBsQdcvoc7jeyoxVzwdD1o1bEcNs9/pi
+SO0ywda57EUCgYEAxA0vQwDkDIFrzK4AwHLrYY2TSF3XOEofZYOU9PRyxlzWlSy6
+urSqABKfaR0hVlu7wX53cOxNDNtsApqLnN8CZx6VDrd0G82bHIkwazpTAw0LF6KJ
+SYMt/UuZlfaORlgPWJMcQvLEx/OAzKAnkFKxRYwRJUD+hmvCByxwGrfc2QUCgYB/
+tCUtd3k4rTlgkob711SrvvRKdG6GaPCNfYYgHdFwzD1FS5GOZCnX6WPKQD9OFr0T
+NL/SZoQVRyr5GiLe/ZQl7/j+atMW0IG4z4oTKYdfJMjPO4+cWZ6KkXN8UZD53kLB
+Y93uvfuqRw+H0tXFb9p+SCE0RT9SsbRok9wvwnUpdQKBgQCld532s35rJi5QF8Oc
+CLdtkLoW72sRuzXWgs3VKw9sBpG/lKI5IlQXKR1e2HWaKKkD/ot+3cI3c6HOJPqh
+zACH2P5FLDFLJPxfjA8RG58mnF9LjM3pRn5ZAj92Osls8lCRHIMB4B5NsyOq5oXV
+JPmyqVL8mnAJW8X/J6mpiCkivQ==''';
+
 }

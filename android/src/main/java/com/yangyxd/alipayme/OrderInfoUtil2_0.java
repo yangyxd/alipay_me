@@ -175,6 +175,11 @@ public class OrderInfoUtil2_0 {
 		return "sign=" + encodedSign;
 	}
 
+	public static String getSign(String data, String rsaKey, boolean rsa2) {
+		System.out.println(data);
+		return SignUtils.sign(data, rsaKey, rsa2);
+	}
+
 	/**
 	 * 要求外部订单号必须唯一。
 	 * @return
