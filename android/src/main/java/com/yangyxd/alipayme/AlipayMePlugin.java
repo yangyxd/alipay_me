@@ -86,10 +86,11 @@ public class AlipayMePlugin implements MethodCallHandler {
 
   // 支付
   public static void pay(final Activity currentActivity, String payInfo, boolean isSandbox, final Result callback){
-    if (TextUtils.isEmpty(payInfo) || TextUtils.isEmpty(APPID)
-            || (TextUtils.isEmpty(RSA2_PRIVATE) && TextUtils.isEmpty(RSA_PRIVATE))) {
-      callback.error("支付发生错误：无效的参数", null, null);
-      return;
+    if (TextUtils.isEmpty(APPID) || (TextUtils.isEmpty(RSA2_PRIVATE) && TextUtils.isEmpty(RSA_PRIVATE))) {
+      if (TextUtils.isEmpty(payInfo)) {
+        callback.error("支付发生错误：无效的参数", null, null);
+        return;
+      }
     }
 
     /*
@@ -131,11 +132,13 @@ public class AlipayMePlugin implements MethodCallHandler {
 
   // 登录
   public static void Oauth(final Activity currentActivity, String authInfo, boolean isSandbox, final Result callback) {
-    if (TextUtils.isEmpty(authInfo) && TextUtils.isEmpty(PID) || TextUtils.isEmpty(APPID)
+    if (TextUtils.isEmpty(PID) || TextUtils.isEmpty(APPID)
             || (TextUtils.isEmpty(RSA2_PRIVATE) && TextUtils.isEmpty(RSA_PRIVATE))
             || TextUtils.isEmpty(TARGET_ID)) {
-      callback.error("授权发生错误：无效的参数", null, null);
-      return;
+      if (TextUtils.isEmpty(authInfo)) {
+        callback.error("授权发生错误：无效的参数", null, null);
+        return;
+      }
     }
 
     /*

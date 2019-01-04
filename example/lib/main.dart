@@ -123,6 +123,7 @@ class _PageState extends State<Page> {
   }
 
   doPayExec(String apyInfo) async {
+    print("apyInfo: $apyInfo");
     await initAlipay();
     var o = await AlipayMe.pay(apyInfo,
       urlScheme: null,
