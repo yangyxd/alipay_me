@@ -48,13 +48,15 @@ class AlipayMe {
 
   /// 授权登录
   ///  - authInfo 用于发起请求的授权登录信息，如果为空，则使用init传入的参数在本地生成
-  ///  - isSandbox 沙盒模式
-  static Future<dynamic> auth({String authInfo, bool isSandbox = false}) async {
+  ///  - isSandbox 沙盒模式(iOS无限)
+  ///  - urlScheme iOS需要用到
+  static Future<dynamic> auth({String authInfo, String urlScheme, bool isSandbox = false}) async {
     var result;
     try {
       result = await _channel.invokeMethod('auth', <String, dynamic>{
         'authInfo': authInfo,
         'isSandbox': isSandbox,
+        'urlScheme': urlScheme
       });
     } on PlatformException catch (e) {
       print(e);

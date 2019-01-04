@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'dart:async';
+import 'dart:io';
 
 import 'package:flutter/services.dart';
 import 'package:alipay_me/alipay_me.dart';
@@ -125,8 +126,9 @@ class _PageState extends State<Page> {
   doPayExec(String apyInfo) async {
     print("apyInfo: $apyInfo");
     await initAlipay();
+
     var o = await AlipayMe.pay(apyInfo,
-      urlScheme: null,
+      urlScheme: "https://www.baidu.com",
       isSandbox: _isSandbox,
     );
     setState(() {
@@ -136,8 +138,14 @@ class _PageState extends State<Page> {
 
   doOauth(BuildContext context) async {
     await initAlipay();
+    String data;
+    if (Platform.isIOS) {
+      data = "Server AuthInfo";  // ioS平台只支持服务器返回
+    }
     var o = await AlipayMe.auth(
+      urlScheme: "https://www.baidu.com",
       isSandbox: _isSandbox,
+      authInfo: data,
     );
     setState(() {
       msg = "$o";
