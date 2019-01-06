@@ -16,6 +16,7 @@ Flutter alipay plugin.
   s.public_header_files = 'Classes/**/*.h'
   s.dependency 'Flutter'
   s.dependency 'AlipaySDK-iOS'
+  # s.dependency 'SwiftyRSA'
 
   s.ios.deployment_target = '8.0'
 end

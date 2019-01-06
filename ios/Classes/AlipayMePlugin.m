@@ -1,6 +1,7 @@
 #import "AlipayMePlugin.h"
 #import <AlipaySDK/AlipaySDK.h>
 
+
 @implementation AlipayMePlugin
 
 + (void)registerWithRegistrar:(NSObject<FlutterPluginRegistrar>*)registrar {
@@ -80,6 +81,15 @@ static NSString* targetId = @"";
     } else if ([@"version" isEqualToString:call.method]) {
         
         result([[AlipaySDK defaultService] currentVersion]);
+        
+    } else if ([@"sign" isEqualToString:call.method]) {)
+        
+        NSString* data = [call.arguments objectForKey:@"data"];
+        NSString* rsaPrivate = [call.arguments objectForKey:@"private"];
+        boolean rsa2 = [@"1" isEqualToString:[call.arguments objectForKey:@"rsa2"]];
+        
+        
+        
         
     } else {
         result(FlutterMethodNotImplemented);
