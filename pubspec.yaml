@@ -1,8 +1,8 @@
 name: alipay_me
 description: Alipay plug-in. Support payment and authorized login. Support Android and iOS. Android supports local computational signatures.
 version: 1.0.0
-author:
-homepage:
+author: yangyxd <yangyxd@126.com>
+homepage: https://github.com/yangyxd/alipay_me
 
 environment:
   sdk: ">=2.0.0-dev.68.0 <3.0.0"
