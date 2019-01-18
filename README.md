@@ -23,6 +23,15 @@ To use this plugin, add `alipay_me` as a dependency in your `pubspec.yaml` file.
 ## Examples
 
   * [Examples App](https://github.com/yangyxd/alipay_me/tree/master/example) - Demonstrates how to use the alipay_me plugin.
+
+阿里蚂蚁金服开放平台：
+https://openhome.alipay.com/platform/appManage.htm
+
+支付宝登录文档：
+https://docs.open.alipay.com/218/105326/
+
+支付宝支付文档：
+https://docs.open.alipay.com/204/105295/
   
 ```dart
 import 'package:alipay_me/alipay_me.dart';
