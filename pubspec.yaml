@@ -1,6 +1,6 @@
 name: alipay_me
-description: Flutter alipay plugin.
-version: 0.0.1
+description: Alipay plug-in. Support payment and authorized login. Support Android and iOS. Android supports local computational signatures.
+version: 1.0.0
 author:
 homepage:
 
